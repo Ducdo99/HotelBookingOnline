@@ -49,7 +49,7 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
             "left join Hotel h on r.hotel.id = h.id " +
             "left join HotelAddress ha on h.id = ha.id " +
             "left join RoomType rt on r.roomType.id = rt.id " +
-            "where r.roomStatus.id = :roomStatusName " +
+            "where r.roomStatus.name = :roomStatusName " +
             "and " +
             "( " +
             "h.name like %:hotelName% " +
@@ -61,7 +61,7 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
             "from Room r " +
             "left join BookingDetail bd on r.id = bd.room.id " +
             "left join Booking b on bd.booking.id = b.id " +
-            "where b.bookingStatus.id = :bookingStatusName " +
+            "where b.bookingStatus.name = :bookingStatusName " +
             "and (bd.checkInDate >= :checkInDate or bd.checkOutDate <= :checkOutDate) " +
             ") " +
             "order by r.price asc ")
