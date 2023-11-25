@@ -14,7 +14,7 @@ import java.util.List;
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     public List<Booking> getAllByAccountIdAndBookingStatusNameOrderByBookingDate(Long accId, String bookingStatusName,
-                                                                               Pageable pageable);
+                                                                                 Pageable pageable);
 
     @Query(value = "select count(b.id) " +
             "from Booking b " +
@@ -28,8 +28,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             ")"
     )
     public Integer countByAccountIdAndBookingStatusNameAndHotelName(@Param("accId") Long accId,
-                                                                  @Param("bookingStatusName") String bookingStatusName,
-                                                                  @Param("hotelName") String hotelName);
+                                                                    @Param("bookingStatusName") String bookingStatusName,
+                                                                    @Param("hotelName") String hotelName);
 
     @Query(value = "select b " +
             "from Booking b " +
@@ -43,9 +43,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             ")"
     )
     public List<Booking> getByAccountIdAAndBookingStatusNameAndHotelName(@Param("accId") Long accId,
-                                                                       @Param("bookingStatusName") String bookingStatusName,
-                                                                       @Param("hotelName") String hotelName,
-                                                                       Pageable pageable);
+                                                                         @Param("bookingStatusName") String bookingStatusName,
+                                                                         @Param("hotelName") String hotelName,
+                                                                         Pageable pageable);
 
     public Integer countByAccountIdAndBookingStatusNameOrderByBookingDate(Long accId, String bookingStatusName);
 
@@ -55,19 +55,14 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "and b.bookingStatus.name like :bookingStatusName " +
             "and b.bookingDate = :bookingDate"
     )
-//    @Query(value = "select * " +
-//            "from booking b " +
-//            "where b.account_id = :accId " +
-//            "and b.booking_status_id = :bookingStatusID " +
-//            "and cast(b.booking_date as date) = cast(:bookingDate as date)",
-//            nativeQuery = true)
+
     public List<Booking> getAllByAccountIdAndBookingStatusNameAndBookingDate(@Param("accId") Long accId,
-                                                                           @Param("bookingStatusName") String bookingStatusName,
-                                                                           @Param("bookingDate") Timestamp bookingDate,
-                                                                           Pageable pageable);
+                                                                             @Param("bookingStatusName") String bookingStatusName,
+                                                                             @Param("bookingDate") Timestamp bookingDate,
+                                                                             Pageable pageable);
 
     public Integer countByAccountIdAndBookingStatusNameAndBookingDate(Long accId, String bookingStatusName,
-                                                                    Timestamp bookingDate);
+                                                                      Timestamp bookingDate);
 
     public Booking getByAccountIdAndBookingStatusNameAndId(Long accId, String bookingStatusName, Long id);
 }

@@ -1,7 +1,5 @@
 package com.hotelbooking.hotelbooking.ouputs;
 
-import com.hotelbooking.hotelbooking.dtos.RoomDTO;
-
 import java.io.Serializable;
 
 public class AvailableRoomInformationResponse implements Serializable {

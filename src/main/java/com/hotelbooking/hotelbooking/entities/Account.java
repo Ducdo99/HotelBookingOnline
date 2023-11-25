@@ -52,10 +52,10 @@ public class Account {
     @JoinColumn(name = "account_status_id")
     private AccountStatus accountStatus;
 
-    @OneToMany(mappedBy = "account",  cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Booking> bookings = new ArrayList<>();
 
-    @OneToMany(mappedBy = "account",  cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CouponOfAccount> couponOfAccounts = new ArrayList<>();
 
     public Account() {

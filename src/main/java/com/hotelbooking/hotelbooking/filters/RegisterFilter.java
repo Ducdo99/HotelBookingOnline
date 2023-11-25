@@ -8,6 +8,7 @@ import com.hotelbooking.hotelbooking.utils.MyConstantVariables;
 import com.hotelbooking.hotelbooking.utils.MyRequestWrapper;
 import com.hotelbooking.hotelbooking.utils.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -15,14 +16,13 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebFilter(urlPatterns = {"/guest/register"})
+@Component
 public class RegisterFilter implements Filter {
     @Autowired
     private ObjectMapper objectMapper;
@@ -33,12 +33,23 @@ public class RegisterFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         HttpServletRequest reqObj = (HttpServletRequest) request;
+        String uri = reqObj.getRequestURI();
+        if (!uri.trim().equalsIgnoreCase("/guest/register".trim())) {
+            chain.doFilter(request, response);
+        } else {
+            this.checkRegistrationRequest(request, response, chain);
+        }
+    }
+
+    private void checkRegistrationRequest(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException {
+
+        HttpServletRequest reqObj = (HttpServletRequest) request;
         HttpServletResponse resObj = (HttpServletResponse) response;
         Map<String, String> errors = new HashMap<>();
         try {
             // create a HttpServletRequest wrapper class
             MyRequestWrapper myRequestWrapper = new MyRequestWrapper(reqObj);
-
             // Get data from RequestBody
             // Get the input stream data from the wrapper
             ServletInputStream cachedServletInputStream = myRequestWrapper.getInputStream();
@@ -82,6 +93,7 @@ public class RegisterFilter implements Filter {
             if (errors.size() > 0) {
                 resObj.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             } else {
+//                chain.doFilter(myRequestWrapper, resObj);
                 chain.doFilter(myRequestWrapper, response);
             }
         } catch (JsonParseException ex) {

@@ -8,6 +8,7 @@ import com.hotelbooking.hotelbooking.services.AccountService;
 import com.hotelbooking.hotelbooking.services.CityService;
 import com.hotelbooking.hotelbooking.services.DistrictService;
 import com.hotelbooking.hotelbooking.services.HotelService;
+import com.hotelbooking.hotelbooking.services.JWTService;
 import com.hotelbooking.hotelbooking.services.RoomService;
 import com.hotelbooking.hotelbooking.services.WardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,9 @@ public class GuestController {
     @Autowired
     private AccountService accountService;
 
+    @Autowired
+    private JWTService jwtService;
+
     @GetMapping(value = "/get-all-hotel")
     public ResponseEntity<?> searchHotelsByAvailableRoomStatus(
             @RequestParam(name = "pageSize", required = false, defaultValue = "9") Integer pageSize,
@@ -56,7 +60,6 @@ public class GuestController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(Collections.singletonMap("err_message", ex.getMessage()));
         } catch (Exception ex) {
-            ex.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Collections.singletonMap("err_message", ex.getMessage()));
         }
@@ -75,7 +78,6 @@ public class GuestController {
             return ResponseEntity.ok(roomService.getAvailableRoomsInfo(
                     hotelName, district, city, checkInDate, checkOutDate, page, pageSize));
         } catch (Exception ex) {
-            ex.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Collections.singletonMap("err_message", ex.getMessage()));
         }
@@ -104,7 +106,6 @@ public class GuestController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(Collections.singletonMap("err_message", ex.getMessage()));
         } catch (Exception ex) {
-            ex.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Collections.singletonMap("err_message", ex.getMessage()));
         }
@@ -115,7 +116,7 @@ public class GuestController {
             @RequestParam(name = "email") String email,
             @RequestParam(name = "password") String password) {
         try {
-            return ResponseEntity.ok(accountService.loginAccount(email, password));
+            return ResponseEntity.ok(jwtService.loginAccount(email, password));
         } catch (NotFoundAccountException ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(Collections.singletonMap("err_message", ex.getMessage()));
@@ -123,6 +124,9 @@ public class GuestController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Collections.singletonMap("err_message", ex.getMessage()));
         } catch (SQLException ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("err_message", ex.getMessage()));
+        } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Collections.singletonMap("err_message", ex.getMessage()));
         }

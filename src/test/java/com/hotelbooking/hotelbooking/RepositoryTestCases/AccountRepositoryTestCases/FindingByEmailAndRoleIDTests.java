@@ -5,7 +5,6 @@ import com.hotelbooking.hotelbooking.entities.Account;
 import com.hotelbooking.hotelbooking.repositories.AccountRepository;
 import com.hotelbooking.hotelbooking.utils.MyConstantVariables;
 import com.hotelbooking.hotelbooking.utils.Utility;
-import org.apache.http.util.Asserts;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +54,7 @@ public class FindingByEmailAndRoleIDTests {
         String accSttName = "Active";
         Account account = accountRepository.findByEmailAndRoleID(email, roleID);
         try {
-            String encryptedPwd =  myUtility.encryptPassword(pwd.trim(), MyConstantVariables.PASSWORD_HASHING_NAME.trim());
+            String encryptedPwd = myUtility.encryptPassword(pwd.trim(), MyConstantVariables.PASSWORD_HASHING_NAME.trim());
             Assertions.assertEquals(email.trim(), account.getEmail());
             Assertions.assertEquals(encryptedPwd.trim(), account.getPwd());
             Assertions.assertEquals(fullName.trim(), account.getFullName());
@@ -67,36 +66,42 @@ public class FindingByEmailAndRoleIDTests {
             throw new RuntimeException(e);
         }
     }
+
     @Test
     public void FBEARID05() {
         String email = "user1@yahoo.com";
         Long roleID = 1L;
         Assertions.assertNull(accountRepository.findByEmailAndRoleID(email, roleID));
     }
+
     @Test
     public void FBEARID06() {
         String email = "user@gamil.com";
         Long roleID = 0L;
         Assertions.assertNull(accountRepository.findByEmailAndRoleID(email, roleID));
     }
+
     @Test
     public void FBEARID07() {
         String email = "user@gamil.com";
         Long roleID = -1L;
         Assertions.assertNull(accountRepository.findByEmailAndRoleID(email, roleID));
     }
+
     @Test
     public void FBEARID08() {
         String email = "user@gamil.com";
         Long roleID = 6L;
         Assertions.assertNull(accountRepository.findByEmailAndRoleID(email, roleID));
     }
+
     @Test
     public void FBEARID09() {
         String email = "user@gmail.com\" OR 1=1";
         Long roleID = 1L;
         Assertions.assertNull(accountRepository.findByEmailAndRoleID(email, roleID));
     }
+
     @Test
     public void FBEARID010() {
         String email = "user@gmail.com; use master; DECLARE @DynSql nvarchar(max) = ''; " +

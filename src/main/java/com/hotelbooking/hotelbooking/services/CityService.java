@@ -17,7 +17,7 @@ public class CityService {
 
     public List<CityInformationResponse> getAllCity() {
         List<City> cityEntities = cityRepository.findAll();
-        if(cityEntities.isEmpty()) {
+        if (cityEntities.isEmpty()) {
 
         }
         List<CityInformationResponse> cityInfoResponseList = new ArrayList<>();

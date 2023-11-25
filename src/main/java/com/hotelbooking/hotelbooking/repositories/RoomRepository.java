@@ -12,38 +12,6 @@ import java.util.List;
 
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Long> {
-/*
-    @Query(value = "select * " +
-            "from room r " +
-            "left join hotel h on r.hotel_id = h.id " +
-            "left join branch b on h.id = b.hotel_id " +
-            "left join room_type rt on r.room_type_id = rt.id " +
-            "where r.room_status_id = :roomStatusID " +
-            "and " +
-            "( " +
-            "h.name like %:hotelName% " +
-            "or (b.district like %:district% and b.city like %:city%) " +
-            ") " +
-            "and r.id not in " +
-            "( " +
-            "select r.id " +
-            "from room r " +
-            "left join booking_detail bd on r.id = bd.room_id " +
-            "left join booking b on bd.booking_id = b.id " +
-            "where b.booking_status_id = :bookingStatusID " +
-            "and (bd.check_in_date >= :checkInDate or bd.check_out_date <= :checkOutDate) " +
-            ") " +
-            "order by r.price asc ", nativeQuery = true)
-
-    public List<Room> findAllAvailableRoom(@Param("hotelName") String hotelName,
-                                           @Param("district") String district,
-                                           @Param("city") String city,
-                                           @Param("checkInDate") String checkInDate,
-                                           @Param("checkOutDate") String checkOutDate,
-                                           @Param("roomStatusID") Long roomStatusID,
-                                           @Param("bookingStatusID") Long bookingStatusID);
-*/
-
     @Query(value = "select r " +
             "from Room r " +
             "left join Hotel h on r.hotel.id = h.id " +

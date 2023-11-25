@@ -10,7 +10,7 @@ public class BookingDTO implements Serializable {
     private Long bookingStatusID;
     private Long accountID;
     private Long couponOfAccountID;
-    private Long bookingRequestStatusID; // Put this status into the client response
+    private Long bookingRequestStatusID;
 
     public BookingDTO() {
     }

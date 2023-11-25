@@ -64,7 +64,6 @@ public class HotelService {
                         HotelListResponse hotelListResponse = new HotelListResponse();
                         hotelListResponse.setTotalPage(totalPage);
                         hotelListResponse.setCurrentPage(page);
-//                    hotelListResponse.setPreviousPage(Math.max(page - 1, 1));
                         hotelListResponse.setPreviousPage(page - 1 < 1 ? 1 : page - 1);
                         hotelListResponse.setNextPage(page + 1 > totalPage ? totalPage : page + 1);
                         hotelListResponse.setPageSize(pageSize);

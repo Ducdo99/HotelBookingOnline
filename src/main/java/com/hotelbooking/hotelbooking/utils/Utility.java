@@ -12,6 +12,7 @@ import java.time.DateTimeException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 @Component
@@ -59,5 +60,54 @@ public class Utility {
             throws NullPointerException, IllegalArgumentException {
         DecimalFormat decimalFormat = new DecimalFormat(myPattern.trim());
         return decimalFormat.format(digit).trim();
+    }
+
+    public Map<String, String> checkNumberError(String inputStr, String regexStr, Map<String, String> errors,
+                                                boolean allowNull, String errorTitle, String formatErrorMessage,
+                                                String valueErrorMessage) {
+        if (!allowNull) {
+            // not allow null, not allow empty
+            if (inputStr == null) {
+                errors.put(errorTitle.trim(), formatErrorMessage.trim());
+            } else if (!this.validateInputString(inputStr.trim(), regexStr.trim())) {
+                errors.put(errorTitle.trim(), formatErrorMessage.trim());
+            } else if (Integer.parseInt(inputStr.trim()) == 0) {
+                errors.put(errorTitle.trim(), valueErrorMessage.trim());
+            }
+        } else {
+            // allow null, and allow empty
+            if (inputStr != null) {
+                if (!inputStr.isEmpty()) {
+                    if (!this.validateInputString(inputStr.trim(), regexStr.trim())) {
+                        errors.put(errorTitle.trim(), formatErrorMessage.trim());
+                    } else if (Integer.parseInt(inputStr.trim()) == 0) {
+                        errors.put(errorTitle.trim(), valueErrorMessage.trim());
+                    }
+                }
+            }
+        }
+        return errors;
+    }
+
+    public Map<String, String> checkStringError(String inputStr, String regexStr, Map<String, String> errors,
+                                                boolean allowNull, String errorTitle, String formatErrorMessage) {
+        if (!allowNull) {
+            // not allow null, not allow empty
+            if (inputStr == null) {
+                errors.put(errorTitle.trim(), formatErrorMessage.trim());
+            } else if (!this.validateInputString(inputStr.trim(), regexStr.trim())) {
+                errors.put(errorTitle.trim(), formatErrorMessage.trim());
+            }
+        } else {
+            // allow null, and allow empty
+            if (inputStr != null) {
+                if (!inputStr.isEmpty()) {
+                    if (!this.validateInputString(inputStr.trim(), regexStr.trim())) {
+                        errors.put(errorTitle.trim(), formatErrorMessage.trim());
+                    }
+                }
+            }
+        }
+        return errors;
     }
 }

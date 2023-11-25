@@ -75,7 +75,7 @@ public class BookingService {
     private Utility utility;
 
     @Transactional(rollbackFor = {Exception.class, DateTimeException.class, Throwable.class})
-    public String creatHotelBooking(String email, Long roleID, HotelBookingCheckoutRequest request)
+    public String createHotelBooking(String email, Long roleID, HotelBookingCheckoutRequest request)
             throws NotFoundAccountException, SQLException, DateTimeException, Exception {
         String checkoutMessage = "fail checkout";
         String roomStatusChangingErrorMessage = "failed";
@@ -84,7 +84,7 @@ public class BookingService {
         Account accountEntity = accountService.checkEmailAndRoleID(email.trim(), roleID);
         CouponOfAccount couponOfAccountEntity = couponOfAccountRepository.getOne(request.getCouponOfAccountID());
         if (couponOfAccountEntity.getId() != null) {
-            if(couponOfAccountEntity.getRemainingQuantity() > 0) {
+            if (couponOfAccountEntity.getRemainingQuantity() > 0) {
                 Timestamp bookingDate = utility.getCurrentUTCTime();
                 BookingStatus bookingStatusEntity = bookingStatusRepository.findByName(
                         MyConstantVariables.AVAILABLE_BOOKING_STATUS_NAME.trim());

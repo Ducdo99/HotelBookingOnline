@@ -19,6 +19,7 @@ import com.hotelbooking.hotelbooking.utils.MyConstantVariables;
 import com.hotelbooking.hotelbooking.utils.MyGoogleIdTokenVerifier;
 import com.hotelbooking.hotelbooking.utils.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,6 +53,9 @@ public class AccountService {
     @Autowired
     private MyGoogleIdTokenVerifier myGoogleIdTokenVerifier;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Transactional(rollbackFor = {NumberFormatException.class, NoSuchAlgorithmException.class, DateTimeException.class,})
     public String createUserAccount(AccountRegistrationRequest accountInfo)
             throws NoSuchAlgorithmException, NumberFormatException, ExistedAccountException {
@@ -68,32 +72,13 @@ public class AccountService {
         Timestamp createdDate = utility.getCurrentUTCTime();
 
         // hashing password
-        String hashedPassword = utility.encryptPassword(accountInfo.getPwd().trim(),
-                MyConstantVariables.PASSWORD_HASHING_NAME.trim());
-        accountInfo.setPwd(hashedPassword.trim());
-
+        accountInfo.setPwd(passwordEncoder.encode(accountInfo.getPwd().trim()).trim());
         Account newAccount = accountConverter.convertToAccountEntity(
                 accountInfo, roleEntity, accountStatusEntity, createdDate);
         Account result = accountRepository.save(newAccount);
 
         message = "success registration";
         return message;
-    }
-
-    public SuccessfulAuthenticationAccountResponse loginAccount(String email, String password)
-            throws SQLException, NoSuchAlgorithmException, NotFoundAccountException {
-
-        String hashedPassword = utility.encryptPassword(password.trim(),
-                MyConstantVariables.PASSWORD_HASHING_NAME.trim());
-        Account accountInfo = accountRepository.findByEmailAndPwd(email.trim(), hashedPassword.trim());
-
-        if (accountInfo == null) {
-            throw new NotFoundAccountException("Not found this account");
-        }
-        Long roleID = accountInfo.getRole().getId();
-        return new SuccessfulAuthenticationAccountResponse(accountInfo.getFullName().trim(),
-                roleID,
-                jwtUtil.createJWTString(accountInfo.getEmail().trim(), roleID));
     }
 
     public AccountInformationResponse getUserInfo(String email, Long roleID)

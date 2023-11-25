@@ -72,7 +72,7 @@ public class UserController {
         try {
             String jwtString = jwtUtil.getJWTStringFromHeader(request);
             return ResponseEntity.ok(Collections.singletonMap(
-                    "message", bookingService.creatHotelBooking(jwtUtil.getEmailFromJWTString(jwtString.trim()),
+                    "message", bookingService.createHotelBooking(jwtUtil.getEmailFromJWTString(jwtString.trim()),
                             Long.valueOf(jwtUtil.getRoleID(jwtString.trim())), checkOutRequest)));
         } catch (NotFoundAccountException ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT)

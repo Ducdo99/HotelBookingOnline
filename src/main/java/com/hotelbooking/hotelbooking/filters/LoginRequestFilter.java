@@ -4,20 +4,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hotelbooking.hotelbooking.utils.MyConstantVariables;
 import com.hotelbooking.hotelbooking.utils.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebFilter(urlPatterns = "/guest/login")
+@Component
 public class LoginRequestFilter implements Filter {
 
     @Autowired
@@ -29,9 +29,21 @@ public class LoginRequestFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         HttpServletRequest reqObj = (HttpServletRequest) request;
+        String uri = reqObj.getRequestURI();
+        if (!uri.trim().equalsIgnoreCase("/guest/login".trim())) {
+            chain.doFilter(request, response);
+        } else {
+            this.checkLoginRequest(request, response, chain);
+        }
+    }
+
+    private void checkLoginRequest(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException {
+
+        HttpServletRequest reqObj = (HttpServletRequest) request;
         HttpServletResponse resObj = (HttpServletResponse) response;
-        String emailParam = reqObj.getParameter("email".trim());
-        String passwordParam = reqObj.getParameter("password".trim());
+        String emailParam = request.getParameter("email".trim());
+        String passwordParam = request.getParameter("password".trim());
         Map<String, String> errors = new HashMap<>();
         try {
             if (emailParam == null) {
